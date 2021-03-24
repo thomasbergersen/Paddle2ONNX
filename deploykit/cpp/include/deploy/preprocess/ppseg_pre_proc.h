@@ -14,44 +14,21 @@
 
 #pragma once
 
+#include <vector>
 #include <string>
-#include <iostream>
 
-#include "yaml-cpp/yaml.h"
-
+#include "include/deploy/preprocess/preprocess.h"
 
 
 namespace Deploy {
 
-class ConfigParser {
+class PaddleSegPreProc : public BasePreprocess {
  public:
-  ConfigParser() {}
+  virtual bool Init(const ConfigParser &parser);
 
-  ~ConfigParser() {}
-
-  bool Load(const std::string &cfg_file, const std::string &toolkit);
-
-  template <typename T>
-  const T Get(const std::string &name) const {
-    return config_[name].as<T>();
-  }
-
-  YAML::Node GetNode(const std::string &node_name) const;
-
- private:
-  bool CommonParser(const YAML::Node &paddle_config);
-
-  bool OcrParser(const YAML::Node &ocr_config);
-
-  bool OcrParserTransforms(const YAML::Node &preprocess_op);
-
-  bool DetParser(const YAML::Node &det_config);
-
-  bool DetParserTransforms(const YAML::Node &preprocess_op);
-
-  bool SegParser(const YAML::Node &seg_config);
-
-  YAML::Node config_;
+  virtual bool Run(const std::vector<cv::Mat> &imgs,
+                  std::vector<DataBlob> *inputs,
+                  std::vector<ShapeInfo> *shape_infos);
 };
 
 }  // namespace Deploy
