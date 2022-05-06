@@ -1,4 +1,4 @@
-PROJECT(paddle2onnx C CXX)
+PROJECT(deploykit C CXX)
 CMAKE_MINIMUM_REQUIRED (VERSION 3.16)
 
 ADD_SUBDIRECTORY(paddle2onnx)
@@ -68,16 +68,16 @@ else ()
     TARGET_LINK_LIBRARIES(paddle2onnx p2o_paddle_proto onnx)
 endif()
 
-install(
-    DIRECTORY ${PROJECT_SOURCE_DIR}/paddle2onnx
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING
-    PATTERN "converter.h"
-)
-install(
-    TARGETS paddle2onnx
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
+#install(
+#    DIRECTORY ${PROJECT_SOURCE_DIR}/paddle2onnx
+#    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#    FILES_MATCHING
+#    PATTERN "converter.h"
+#)
+#install(
+#    TARGETS paddle2onnx
+#    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#)
 
 if (BUILD_PADDLE2ONNX_EXE)
   remove_definitions(-DPADDLE2ONNX_LIB)

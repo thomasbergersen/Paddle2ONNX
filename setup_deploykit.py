@@ -53,7 +53,7 @@ setup_configs["BUILD_DEPLOYKIT_PYTHON"] = os.getenv("BUILD_DEPLOYKIT_PYTHON",
                                                     "ON")
 
 TOP_DIR = os.path.realpath(os.path.dirname(__file__))
-SRC_DIR = os.path.join(TOP_DIR, 'paddle2onnx')
+SRC_DIR = os.path.join(TOP_DIR, 'deploykit')
 CMAKE_BUILD_DIR = os.path.join(TOP_DIR, '.setuptools-cmake-build')
 
 WINDOWS = (os.name == 'nt')
@@ -222,8 +222,8 @@ class build_py(setuptools.command.build_py.build_py):
         self.run_command('cmake_build')
 
         generated_python_files = \
-            glob.glob(os.path.join(CMAKE_BUILD_DIR, 'paddle2onnx', '*.py')) + \
-            glob.glob(os.path.join(CMAKE_BUILD_DIR, 'paddle2onnx', '*.pyi'))
+            glob.glob(os.path.join(CMAKE_BUILD_DIR, 'deploykit', '*.py')) + \
+            glob.glob(os.path.join(CMAKE_BUILD_DIR, 'deploykit', '*.pyi'))
 
         for src in generated_python_files:
             dst = os.path.join(TOP_DIR, os.path.relpath(src, CMAKE_BUILD_DIR))
@@ -258,7 +258,7 @@ class build_ext(setuptools.command.build_ext.build_ext):
                     lib_path = release_lib_dir
             src = os.path.join(lib_path, filename)
             dst = os.path.join(
-                os.path.realpath(self.build_lib), "paddle2onnx", filename)
+                os.path.realpath(self.build_lib), "deploykit", filename)
             self.copy_file(src, dst)
 
 
@@ -290,9 +290,7 @@ cmdclass = {
 
 ext_modules = [
     setuptools.Extension(
-        name=str('paddle2onnx.paddle2onnx_cpp2py_export'), sources=[]),
-    setuptools.Extension(
-        name=str('paddle2onnx.deploykit_cpp2py_export'), sources=[]),
+        name=str('deploykit.deploykit_cpp2py_export'), sources=[]),
 ]
 
 ################################################################################
@@ -317,9 +315,9 @@ if sys.version_info[0] == 3:
 ################################################################################
 
 setuptools.setup(
-    name="paddle2onnx",
+    name="deploykit",
     version=VersionInfo.version,
-    description="Export PaddlePaddle to ONNX",
+    description="Deploy Kit Tool For Deeplearning models.",
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     packages=packages,
@@ -329,11 +327,10 @@ setuptools.setup(
     author='paddle-infer',
     author_email='paddle-infer@baidu.com',
     url='https://github.com/PaddlePaddle/Paddle2ONNX.git',
-    install_requires=['six', 'protobuf', 'onnx<=1.9.0'],
+    install_requires=[],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    license='Apache 2.0',
-    entry_points={'console_scripts': ['paddle2onnx=paddle2onnx.command:main']})
+    license='Apache 2.0')

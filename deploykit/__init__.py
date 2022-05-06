@@ -12,25 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import absolute_import
-from paddle2onnx.utils import logging
-try:
-    import paddle2onnx.deploykit_cpp2py_export as deploykit_c
-except:
-    logging.warning(
-        "[Paddle2ONNX][WARN] This package didn't compile with deploykit, refer https://github.com/PaddlePaddle/Paddle2ONNX/tree/deploykit/docs/zh/deploykit.md for more details."
-    )
+import logging
+from . import deploykit_cpp2py_export as deploykit_c
 
 try:
     OrtBackendOption = deploykit_c.OrtBackendOption
 except:
-    logging.warning(
-        "[Paddle2ONNX][WARN] This package didn't compile with onnxruntime backend, refer https://github.com/PaddlePaddle/Paddle2ONNX/tree/deploykit/docs/zh/deploykit.md for more details."
-    )
-
+    def OrtBackendOption():
+       raise Exception("[DeployKit] This package didn't compile with onnxruntime backend.")
 
 class OrtBackend:
     """ Initialization for onnxruntime Backend
-
     Arguments:
         model_file: Path of model file, if the suffix of this file is ".onnx", will be loaded as onnx model; otherwise will be loaded as Paddle model.
         params_file: Path of parameters file, if loaded as onnx model or there's no parameter for Paddle model, set params_file to empty.
@@ -64,14 +56,12 @@ class OrtBackend:
 try:
     TrtBackendOption = deploykit_c.TrtBackendOption
 except:
-    logging.warning(
-        "[Paddle2ONNX][WARN] This package didn't compile with TensorRT backend, refer https://github.com/PaddlePaddle/Paddle2ONNX/tree/deploykit/docs/zh/deploykit.md for more details."
-    )
+    def TrtBackendOption():
+       raise Exception("[DeployKit] This package didn't compile with tensorrt backend.")
 
 
 class TrtBackend:
     """ Initialization for tensorrt Backend
-
     Arguments:
         model_file: Path of model file, if the suffix of this file is ".onnx", will be loaded as onnx model; otherwise will be loaded as Paddle model.
         params_file: Path of parameters file, if loaded as onnx model or there's no parameter for Paddle model, set params_file to empty.
