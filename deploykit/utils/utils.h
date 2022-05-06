@@ -13,6 +13,18 @@
 // limitations under the License.
 
 #pragma once
+
+
+#if defined(_WIN32)
+#ifdef DEPLOYKIT_LIB
+#define DEPLOYKIT_DECL __declspec(dllexport)
+#else
+#define DEPLOYKIT_DECL __declspec(dllimport)
+#endif  // DEPLOYKIT_LIB
+#else
+#define DEPLOYKIT_DECL __attribute__((visibility("default")))
+#endif  // _WIN32
+
 #include <stdlib.h>
 
 #include <fstream>
@@ -22,7 +34,7 @@
 
 namespace deploykit {
 
-class KitLogger {
+class DEPLOYKIT_DECL KitLogger {
  public:
   KitLogger() {
     line_ = "";
@@ -32,7 +44,15 @@ class KitLogger {
   explicit KitLogger(bool verbose, const std::string& prefix = "[DeployKit]");
 
   template <typename T>
-  KitLogger& operator<<(const T& val);
+  KitLogger& operator<<(const T& val) {
+    if (!verbose_) {
+      return *this;
+    }
+    std::stringstream ss;
+    ss << val;
+    line_ += ss.str();
+    return *this;
+  }
   KitLogger& operator<<(std::ostream& (*os)(std::ostream&));
   ~KitLogger() {
     if (!verbose_ && line_ != "") {
@@ -46,16 +66,5 @@ class KitLogger {
   bool verbose_ = true;
 };
 
-template <typename T>
-KitLogger& KitLogger::operator<<(const T& val) {
-  if (!verbose_) {
-    return *this;
-  }
-  std::stringstream ss;
-  ss << val;
-  line_ += ss.str();
-  return *this;
-}
-
-void Assert(bool condition, const std::string& message);
+DEPLOYKIT_DECL void Assert(bool condition, const std::string& message);
 }  // namespace deploykit

@@ -14,6 +14,7 @@
 
 #pragma once
 
+
 #include <iostream>
 #include <memory>
 #include <string>
@@ -36,7 +37,7 @@ struct OrtValueInfo {
   ONNXTensorElementDataType dtype;
 };
 
-struct OrtBackendOption {
+struct DEPLOYKIT_DECL  OrtBackendOption {
   // -1 means default
   // 0: ORT_DISABLE_ALL
   // 1: ORT_ENABLE_BASIC
@@ -52,9 +53,9 @@ struct OrtBackendOption {
   int gpu_id = 0;
 };
 
-ONNXTensorElementDataType GetOrtDtype(int paddle_dtype);
+DEPLOYKIT_DECL  ONNXTensorElementDataType GetOrtDtype(int paddle_dtype);
 
-class OrtBackend {
+class DEPLOYKIT_DECL  OrtBackend {
  public:
   OrtBackend() {}
   void BuildOption(const OrtBackendOption& option);

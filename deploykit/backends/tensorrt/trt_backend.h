@@ -40,13 +40,13 @@ namespace deploykit {
 
 using namespace samplesCommon;
 
-struct TrtValueInfo {
+struct DEPLOYKIT_DECL TrtValueInfo {
   std::string name;
   std::vector<int> shape;
   nvinfer1::DataType dtype;
 };
 
-struct TrtBackendOption {
+struct DEPLOYKIT_DECL TrtBackendOption {
   int gpu_id = 0;
   int enable_fp16 = 0;  // 0 or 1
   int enable_int8 = 0;  // 0 or 1
@@ -59,11 +59,11 @@ struct TrtBackendOption {
   std::string serialize_file = "";
 };
 
-std::vector<int> toVec(const nvinfer1::Dims& dim);
-size_t TrtDataTypeSize(const nvinfer1::DataType& dtype);
-size_t GetPaddleDataType(const nvinfer1::DataType& dtype);
+DEPLOYKIT_DECL std::vector<int> toVec(const nvinfer1::Dims& dim);
+DEPLOYKIT_DECL size_t TrtDataTypeSize(const nvinfer1::DataType& dtype);
+DEPLOYKIT_DECL size_t GetPaddleDataType(const nvinfer1::DataType& dtype);
 
-class TrtBackend {
+class DEPLOYKIT_DECL TrtBackend {
  public:
   TrtBackend() : engine_(nullptr), context_(nullptr) {}
   void BuildOption(const TrtBackendOption& option);

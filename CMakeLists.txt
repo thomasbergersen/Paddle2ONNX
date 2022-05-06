@@ -196,6 +196,7 @@ option(BUILD_DEMO "if to build the deploykit demo code." ON)
 option(BUILD_DEPLOYKIT_PYTHON "if build python lib for deploykit." OFF)
 
 if(BUILD_DEPLOYKIT)
+add_definitions(-DDEPLOYKIT_LIB)
 file(GLOB_RECURSE ALL_KIT_SRCS ${PROJECT_SOURCE_DIR}/deploykit/*.cc)
 file(GLOB_RECURSE KIT_ORT_SRCS ${PROJECT_SOURCE_DIR}/deploykit/backends/ort/*.cc)
 file(GLOB_RECURSE KIT_TRT_SRCS ${PROJECT_SOURCE_DIR}/deploykit/backends/tensorrt/*.cc ${PROJECT_SOURCE_DIR}/deploykit/backends/tensorrt/*.cpp)
@@ -225,28 +226,15 @@ if(ENABLE_TRT_BACKEND)
   list(APPEND BACKEND_LIBS ${CUDA_LIB} ${TRT_INFER_LIB} ${TRT_ONNX_LIB} ${TRT_CAFFE_LIB} ${TRT_PLUGIN_LIB})
 endif()
 
-ADD_LIBRARY(deploykit SHARED ${ALL_KIT_SRCS})
-target_link_libraries(deploykit PUBLIC ${BACKEND_LIBS})
-
 if(ENABLE_PADDLE_FRONTEND)
   add_definitions(-DENABLE_PADDLE_FRONTEND)
-  target_link_libraries(deploykit PUBLIC paddle2onnx)
+  list(APPEND BACKEND_LIBS "paddle2onnx")
 endif(ENABLE_PADDLE_FRONTEND)
 
-install(
-  DIRECTORY ${PROJECT_SOURCE_DIR}/deploykit
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  FILES_MATCHING
-  PATTERN "converter.h"
-)
-install(
-  TARGETS deploykit
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-install(
-  FILES ${BACKEND_LIBS}
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
+message("============== ${BACKEND_LIBS}")
+ADD_LIBRARY(deploykit SHARED ${ALL_KIT_SRCS})
+target_link_libraries(deploykit ${BACKEND_LIBS})
+
 
 if(BUILD_DEMO)
   add_executable(resnet50_exe ${PROJECT_SOURCE_DIR}/deploykit_demo/cpp/resnet50.cc)

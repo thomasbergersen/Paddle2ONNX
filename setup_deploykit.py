@@ -304,7 +304,6 @@ packages = setuptools.find_packages()
 # Test
 ################################################################################
 
-setup_requires.append('pytest-runner')
 
 if sys.version_info[0] == 3:
     # Mypy doesn't work with Python 2
