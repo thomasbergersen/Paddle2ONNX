@@ -312,6 +312,8 @@ if sys.version_info[0] == 3:
 # Final
 ################################################################################
 
+package_data = {"deploykit": ["LICENSE", "ThirdPartyNotices.txt"]}
+
 setuptools.setup(
     name="deploykit",
     version=VersionInfo.version,
@@ -319,6 +321,7 @@ setuptools.setup(
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     packages=packages,
+    package_data=package_data,
     include_package_data=True,
     setup_requires=setup_requires,
     extras_require=extras_require,
